@@ -1,0 +1,221 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[english]{babel}
+
+\usepackage{color}
+
+\usepackage{listings}[]
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\small,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\usepackage{biblatex}
+\addbibresource{ref.bib}
+
+\title{Simulating 1D Waves in Python}
+\author{Sorn Zupanic Maksumic}
+\date{{\small February 2021}}
+
+\begin{document}
+
+
+\maketitle
+
+\newpage
+\tableofcontents
+
+\newpage
+\section{Overview}
+This document shows how to solve the 1D wave equation (Equation \ref{eq:1d-wave}) in Python. The solution is approximated with the central finite difference method (also known as the Crank-Nicholson scheme). The algorithm description is influenced by \cite{hpl-decay} and \cite{hpl-wave}.
+
+\begin{equation}
+    \frac{\partial^2}{\partial t^2}u(x,t) = c^2\frac{\partial^2}{\partial x^2}u(x,t)
+    \label{eq:1d-wave}
+\end{equation}
+
+\subsection{Terminology}
+It's called a 1D wave equation even though $u(x,t)$ has two inputs: $x$ and $t$. This is because we only count the number of inputs in the spacial domain.
+
+\noindent\\The output $u(x,t)$ is the $y$-coordinate in space, for the given $x$ and $t$.
+
+\subsection{Dependencies}
+The Python script depends on the following 3\textsuperscript{rd} party libraries:
+\begin{itemize}
+    \item Matplotlib
+    \item Numpy
+\end{itemize}
+
+\subsection{Result}
+The program outputs an animated GIF file. The animation shows six 1D waves with different velocities.
+
+
+% \noindent\\Equation \ref{eq:1d-wave} is often written as Equation \ref{eq:1d-wave-short}:
+
+% \begin{equation}
+%     u_{tt} = c^2 u_{xx}
+%     \label{eq:1d-wave-short}
+% \end{equation}
+
+\newpage
+\section{Algorithm Description}
+This document uses $u_i^{n}$ as a concise notation for $u(x_i, t_n)$. Similarly, $u_{ij}^n$ is a concise notation for $u(x_i, y_j, t_n)$.
+
+\subsection{Initial Conditions}
+The Initial Condition (IC) is shown in Equation \ref{eq:ic}. It returns $u$ for all $x_i$ when $t=0$. In other words, it returns the start position for each $x_i$. The equation set given in Equation \ref{eq:ic} produces a "triangle-shaped" IC.
+
+\begin{equation}
+    I(x_i)=u_i^0=u(x_i, t_0)=
+        \begin{cases}
+            u(i\Delta x,0)=\frac{A}{\bar x}x, 0 \leq x \leq 1\\
+            u(i\Delta x,0)=\frac{A}{L-\bar x}(L-x), 1 \leq x < L
+        \end{cases}
+    \label{eq:ic}
+\end{equation}
+
+\noindent The IC for the first-order derivative is zero (see Equation \ref{eq:icd}). In other words, there is no initial velocity. This is important in a later step, because it lets us approximate Equation \ref{eq:icd} with a first-order partial central difference and get Equation \ref{eq:icd-sub}.
+
+\begin{equation}
+    \frac{\partial}{\partial t}u(x,0)=0
+    \label{eq:icd}
+\end{equation}
+
+\begin{equation}
+    \frac{\partial}{\partial t}u(x_i,t_0) \approx 
+    \frac{u_i^1-u_i^{-1}}{2\Delta t} = 0 \implies
+    u_i^1 = u_i^{-1}
+    \label{eq:icd-sub}
+\end{equation}
+
+\subsection{Boundary Conditions}
+The boundary conditions are shown in Equation \ref{eq:bc}, where $L$ is the length of the wave. In other words, the wave is \textit{fixed} at both ends.
+
+\begin{equation}
+    u(0,t)=0\ \wedge\ u(L,t)=0
+    \label{eq:bc}
+\end{equation}
+
+\subsection{Central Finite Difference}
+% Equation \ref{eq:1d-wave} is approximated with second-order central finite differences, and rewritten as Equation \ref{eq:cfdm}.
+
+% \begin{equation}
+%     u_i^{n+1}=C^2(u_{i+1}^n-2u_i^n+u_{i-1}^n)+2u_i^n-u_i^{n-1}
+%     \label{eq:cfdm}
+% \end{equation}
+
+Start with the 1D wave equation (Equation \ref{eq:1d-wave}) and replace both sides of the equation with second-order central finite differences. The second-order central finite differences are given as Equation \ref{eq:cfdm-approx-dtt} and \ref{eq:cfdm-approx-dxx}.
+
+\begin{equation}
+    \frac{\partial^2}{\partial t^2}u(x_i,t_n)\approx \frac{u_i^{n+1}-2u_i^n+u_i^{n-1}}{\Delta t^2}
+    \label{eq:cfdm-approx-dtt}
+\end{equation}
+
+\begin{equation}
+    \frac{\partial^2}{\partial x^2}u(x_i,t_n)\approx \frac{u_{i+1}^{n}-2u_i^n+u_{i-1}^{n}}{\Delta x^2}
+    \label{eq:cfdm-approx-dxx}
+\end{equation}
+
+\newpage
+\noindent\\Result:
+
+\begin{equation}
+    \frac{u_i^{n+1}-2u_i^n+u_i^{n-1}}{\Delta t^2}
+    = c^2\left(
+    \frac{u_{i+1}^{n}-2u_i^n+u_{i-1}^{n}}{\Delta x^2}
+    \right)
+    \label{}
+\end{equation}
+
+\noindent\\Solve for $u_i^{n+1}$:
+
+\begin{equation}
+    u_i^{n+1} = C^2(u_{i+1}^n - 2u_i^n + u_{i-1}^n) + 2u_i^n-u_i^{n-1}
+    \label{eq:cfdm}
+\end{equation}
+
+\noindent\\Here, $C$ is Courant's number:
+\begin{equation}
+    C=c\frac{\Delta x}{\Delta t}
+\end{equation}
+
+\noindent\\The "problem" with Equation \ref{eq:cfdm} is that we do not have $u_i^{n-1}$. Therefore, we use Equation \ref{eq:icd-sub} to substitute $u_i^{n-1}$ with $u_i^{n+1}$, do some simple algebra, and get Equation \ref{eq:firstfunc}:
+
+\begin{equation}
+    u_i^{n+1}=\frac{1}{2}C^2\left(u_{i+1}^n-2u_i^n+u_{i-1}^n\right)+u_i^n
+    \label{eq:firstfunc}
+\end{equation}
+
+\noindent\\We use the IC to get all $u_i^0$. Then, solve $u_i^{1}$ with Equation \ref{eq:firstfunc}. Now, that we have $u_i^{n-1}$, use Equation \ref{eq:cfdm} to solve the rest.
+
+\noindent\\That's it!
+
+\newpage
+\section{Code Explanation}
+Here, some parts of the code are explained. The code is commented with further explanations.
+
+\subsection{Solver}
+The first loop applies Equation \ref{eq:ic} to find $u_i^0$ for all $i$:
+
+\begin{lstlisting}[language=Python, caption=Initial Condition]
+for i in range(0, Nx+1):
+    u[0][i] = I(i*dx, A, s, L)
+\end{lstlisting}
+
+\noindent\\The second loop applies Equation \ref{eq:icd-sub} to find $u_i^1$ for all $i$:
+
+\begin{lstlisting}[language=Python, caption=Initial Condition]
+for i in range(1, Nx):
+    u[1][i] = 0.5*(C**2)*(u[0][i+1]-2*u[0][i]+u[0][i-1]) + \
+              u[0][i]
+\end{lstlisting}
+
+\noindent\\The third loop applies Equation \ref{eq:cfdm} to solve the rest of the 1D wave equation.
+
+\begin{lstlisting}[language=Python, caption=Initial Condition]
+for n in range(1, Nt):
+    for i in range(1, Nx):
+        u[n+1][i] = (C**2)*(u[n][i+1]-2*u[n][i]+u[n][i-1]) + \
+                    2*u[n][i]-u[n-1][i]
+\end{lstlisting}
+
+\subsection{Animation}
+The reason for first looping over all the time steps and \textit{then} over all the 1D waves, is to group the correct animations together. If you do it the other way around, it only display one wave at a time: first displaying the entire animation for the first 1D wave, then the second, ...
+
+\begin{lstlisting}[language=Python, caption=Initial Condition]
+for n in range(T):
+    plts_tmp = []
+    for i in range(len(li)):
+        u, x, color = svl[i][0], svl[i][1], svl[i][2]
+        p = plt.plot(x, u[n][:] + offset * i, color)
+        plts_tmp.append(*p)
+    plts.append(plts_tmp)
+\end{lstlisting}
+
+\noindent\\But by grouping the correct animations together it displays the animations for all the 1D waves at the same time.
+
+\newpage
+\printbibliography
+
+\end{document}
