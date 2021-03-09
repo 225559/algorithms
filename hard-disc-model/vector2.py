@@ -22,27 +22,13 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
-import random
-from particle import Particle
-from simulator import Simulator
-from vector2 import Vector2
-from window import Window
-
-if __name__ == '__main__':
-    particles = []
-    for _ in range(10):
-        rx = random.random()
-        ry = random.random()
-        vx = random.random()
-        vy = random.random()
-        position = Vector2(rx, ry)
-        velocity = Vector2(vx, vy)
-        radius = random.uniform(0.01, 0.02)
-        mass = 1
-        r, g, b = random.randint(0,255), random.randint(0,255), random.randint(0,255)
-        color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
-        particles.append(Particle(position, velocity, radius, mass, color))
+class Vector2:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
     
-    simulator = Simulator(particles)
-    simulator.next_event()
-    window = Window(500, simulator.next_event, particles)
+    def __sub__(self, other):
+        return Vector2(self.x - other.y, self.y - other.y)
+
+    def dot(self, other):
+        return self.x * other.x + self.y * other.y

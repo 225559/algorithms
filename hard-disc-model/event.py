@@ -22,27 +22,22 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
-import random
-from particle import Particle
-from simulator import Simulator
-from vector2 import Vector2
-from window import Window
+class Event:
+    def __init__(self, time, i, j):
+        self.time = time
+        self.i = i
+        self.j = j
+        if i is not None:
+            self.i_cc = self.i.cc
+        if j is not None:
+            self.j_cc = self.j.cc
 
-if __name__ == '__main__':
-    particles = []
-    for _ in range(10):
-        rx = random.random()
-        ry = random.random()
-        vx = random.random()
-        vy = random.random()
-        position = Vector2(rx, ry)
-        velocity = Vector2(vx, vy)
-        radius = random.uniform(0.01, 0.02)
-        mass = 1
-        r, g, b = random.randint(0,255), random.randint(0,255), random.randint(0,255)
-        color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
-        particles.append(Particle(position, velocity, radius, mass, color))
-    
-    simulator = Simulator(particles)
-    simulator.next_event()
-    window = Window(500, simulator.next_event, particles)
+    def invalid(self):
+        invalid_i = self.i is not None and self.i_cc != self.i.cc
+        invalid_j = self.j is not None and self.j_cc != self.j.cc
+        if invalid_i or invalid_j:
+            return True
+        return False
+
+    def __lt__(self, other):
+        return self.time < other.time
