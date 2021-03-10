@@ -26,23 +26,21 @@ import random
 from particle import Particle
 from simulator import Simulator
 from vector2 import Vector2
-from window import Window
 
 if __name__ == '__main__':
     particles = []
-    for _ in range(10):
+    for _ in range(100):
         rx = random.random()
         ry = random.random()
-        vx = random.random()
-        vy = random.random()
+        vx = random.uniform(-0.005, +0.005)
+        vy = random.uniform(-0.005, +0.005)
         position = Vector2(rx, ry)
         velocity = Vector2(vx, vy)
         radius = random.uniform(0.01, 0.02)
         mass = 1
-        r, g, b = random.randint(0,255), random.randint(0,255), random.randint(0,255)
+        r, g, b = random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
         color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
         particles.append(Particle(position, velocity, radius, mass, color))
     
     simulator = Simulator(particles)
-    simulator.next_event()
-    window = Window(500, simulator.next_event, particles)
+    simulator.simulate()

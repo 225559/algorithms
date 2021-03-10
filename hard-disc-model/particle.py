@@ -22,8 +22,6 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
-from vector2 import Vector2
-
 class Particle:
     def __init__(self, position, velocity, radius, mass, color):
         self.position = position
@@ -37,9 +35,6 @@ class Particle:
         self.position.x += self.velocity.x * time
         self.position.y += self.velocity.y * time
 
-    def count(self):
-        return self.cc
-
     def next_collision(self, j):
         i = self
         if i == j:
@@ -51,26 +46,28 @@ class Particle:
         drdr = dr.dot(dr)
         sigma = i.radius + j.radius
         d = (dvdr * dvdr) - dvdv * (drdr - (sigma * sigma))
-        if dvdr > 0 or d < 0:
+        if dvdr > 0 or dvdv == 0 or d < 0:
             return float('inf')
         return -(dvdr + pow(d, 0.5)) / dvdv
 
     def next_collision_hwall(self):
         if self.velocity.y > 0:
-            return (1 - (self.position.y + self.radius)) / self.velocity.y
+            return (1.0 - self.position.y - self.radius) / self.velocity.y
         if self.velocity.y < 0:
             return (self.radius - self.position.y) / self.velocity.y
         return float('inf')
 
     def next_collision_vwall(self):
         if self.velocity.x > 0:
-            return (1 - (self.position.x + self.radius)) / self.velocity.x
+            return (1.0 - self.position.x - self.radius) / self.velocity.x
         if self.velocity.x < 0:
             return (self.radius - self.position.x) / self.velocity.x
         return float('inf')
 
     def collide(self, j):
         i = self
+        if i == j:
+            return
         dr = j.position - i.position
         dv = j.velocity - i.velocity
         dvdr = dv.dot(dr)
@@ -86,9 +83,9 @@ class Particle:
         j.cc += 1
 
     def collide_hwall(self):
-        self.velocity.x = -self.velocity.x
+        self.velocity.y = -self.velocity.y
         self.cc += 1
 
     def collide_vwall(self):
-        self.velocity.y = -self.velocity.y
+        self.velocity.x = -self.velocity.x
         self.cc += 1
