@@ -38,7 +38,7 @@ class Window:
         x1 = x + r
         y0 = y - r
         y1 = y + r
-        return self.canvas.create_oval(x0, y0, x1, y1, fill=color)
+        return self.canvas.create_oval(x0, y0, x1, y1, fill=color, outline=color)
 
     def redraw(self):
         self.canvas.update()

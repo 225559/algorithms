@@ -29,18 +29,40 @@ from vector2 import Vector2
 
 if __name__ == '__main__':
     particles = []
-    for _ in range(100):
+
+    # Random particles
+        # radius = random.uniform(0.01, 0.02)
+        # mass = 1
+        # r, g, b = random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
+
+    # Create water particles
+    for _ in range(250):
         rx = random.random()
         ry = random.random()
-        vx = random.uniform(-0.005, +0.005)
-        vy = random.uniform(-0.005, +0.005)
+        vx = random.uniform(-0.003, +0.003)
+        vy = random.uniform(-0.003, +0.003)
         position = Vector2(rx, ry)
         velocity = Vector2(vx, vy)
-        radius = random.uniform(0.01, 0.02)
-        mass = 1
-        r, g, b = random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
+        radius = 0.002
+        mass = 0.1
+        r, g, b = 0, 0, 255
         color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
         particles.append(Particle(position, velocity, radius, mass, color))
+    
+    # Create ink particles
+    for i in range(1, 7):
+        for j in range(1, 7):
+            rx = 0.40 + i*0.01
+            ry = 0.40 + j*0.01
+            vx = random.uniform(0, 0)
+            vy = random.uniform(0, 0)
+            position = Vector2(rx, ry)
+            velocity = Vector2(vx, vy)
+            radius = 0.004
+            mass = 0.5
+            r, g, b = 255, 0, 0
+            color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
+            particles.append(Particle(position, velocity, radius, mass, color))
     
     simulator = Simulator(particles)
     simulator.simulate()
