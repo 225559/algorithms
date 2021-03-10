@@ -28,7 +28,7 @@ class Vector2:
         self.y = y
     
     def __sub__(self, other):
-        return Vector2(self.x - other.y, self.y - other.y)
+        return Vector2(self.x - other.x, self.y - other.y)
 
     def dot(self, other):
         return self.x * other.x + self.y * other.y

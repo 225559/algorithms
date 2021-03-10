@@ -25,17 +25,13 @@
 import tkinter as tk
 
 class Window:
-    def __init__(self, unit_box_size, cb_next_event, particles):
+    def __init__(self, unit_box_size, particles):
         self.unit_box_size = unit_box_size
-        self.cb_next_event = cb_next_event
         self.particles = particles
         self.window = tk.Tk()
         self.window.title("Hard Disc Model - Particle Simulation")
-        self.button = tk.Button(self.window, text="next event", command=self.next_event)
         self.canvas = tk.Canvas(self.window, width=unit_box_size, height=unit_box_size, bg='#fcfcfc')
-        self.button.pack()
         self.canvas.pack()
-        self.window.mainloop()
     
     def create_circle(self, x, y, r, color):
         x0 = x - r
@@ -45,15 +41,11 @@ class Window:
         return self.canvas.create_oval(x0, y0, x1, y1, fill=color)
 
     def redraw(self):
+        self.canvas.update()
+        self.canvas.update_idletasks()
         self.canvas.delete("all") # clear
         for particle in self.particles:
             x = particle.position.x * self.unit_box_size
             y = particle.position.y * self.unit_box_size
             r = particle.radius * self.unit_box_size
             self.create_circle(x, y, r, particle.color)
-        self.canvas.update()
-        self.canvas.update_idletasks()
-
-    def next_event(self):
-        self.cb_next_event()
-        self.redraw()
