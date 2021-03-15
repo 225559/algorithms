@@ -30,6 +30,8 @@ class Window:
         self.particles = particles
         self.window = tk.Tk()
         self.window.title("Hard Disc Model - Particle Simulation")
+        self.avg_ink_distance_from_center = tk.Text(self.window, height=1)
+        self.avg_ink_distance_from_center.pack()
         self.canvas = tk.Canvas(self.window, width=unit_box_size, height=unit_box_size, bg='#fcfcfc')
         self.canvas.pack()
     
@@ -40,12 +42,23 @@ class Window:
         y1 = y + r
         return self.canvas.create_oval(x0, y0, x1, y1, fill=color, outline=color)
 
+    def update_text(self):
+        avg = 0
+        N = len(self.particles)
+        for i in self.particles:
+            if i.kind == "ink":
+                avg += i.distance_from_center()
+        s = 'Avg. ink particle distance from center: {:f}'.format(avg/N)
+        self.avg_ink_distance_from_center.delete("1.0", "end")
+        self.avg_ink_distance_from_center.insert(tk.END, s)
+
     def redraw(self):
         self.canvas.update()
         self.canvas.update_idletasks()
         self.canvas.delete("all") # clear
-        for particle in self.particles:
-            x = particle.position.x * self.unit_box_size
-            y = particle.position.y * self.unit_box_size
-            r = particle.radius * self.unit_box_size
-            self.create_circle(x, y, r, particle.color)
+        for i in self.particles:
+            x = i.position.x * self.unit_box_size
+            y = i.position.y * self.unit_box_size
+            r = i.radius * self.unit_box_size
+            self.create_circle(x, y, r, i.color)
+        self.update_text()

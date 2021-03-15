@@ -22,18 +22,32 @@
 # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
+from vector2 import Vector2
+
 class Particle:
-    def __init__(self, position, velocity, radius, mass, color):
+    def __init__(self, position, velocity, radius, mass, kind):
         self.position = position
         self.velocity = velocity
         self.radius = radius
         self.mass = mass
-        self.color = color
+        r, g, b = 255, 255, 255
+        if kind == "ink":
+            r, g, b = 255, 0, 0
+        if kind == "water":
+            r, g, b = 0, 0, 255
+        self.color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
+        self.kind = kind
         self.cc = 0 # collision counter
+
+    def get_kind(self):
+        return self.kind
 
     def move(self, time):
         self.position.x += self.velocity.x * time
         self.position.y += self.velocity.y * time
+
+    def distance_from_center(self):
+        return Vector2(abs(0.5 - self.position.x), abs(0.5 - self.position.y)).magnitude()
 
     def _overlaps(self, j):
         """Checks if this particle overlaps with particle j.

@@ -27,6 +27,9 @@ class Vector2:
         self.x = x
         self.y = y
     
+    def magnitude(self):
+        return pow(self.x * self.x + self.y * self.y, 0.5)
+
     def __sub__(self, other):
         return Vector2(self.x - other.x, self.y - other.y)
 

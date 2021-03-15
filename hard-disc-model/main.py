@@ -42,9 +42,7 @@ if __name__ == '__main__':
             velocity = Vector2(vx, vy)
             radius = 0.004
             mass = 0.5
-            r, g, b = 255, 0, 0
-            color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
-            particles.append(Particle(position, velocity, radius, mass, color))
+            particles.append(Particle(position, velocity, radius, mass, "ink"))
     
 
     # Create water particles
@@ -61,7 +59,7 @@ if __name__ == '__main__':
         r, g, b = 0, 0, 255
         color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
 
-        i = Particle(position, velocity, radius, mass, color)
+        i = Particle(position, velocity, radius, mass, "water")
         if not i.overlaps(particles):
             particles.append(i)
             N += 1
