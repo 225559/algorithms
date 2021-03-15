@@ -48,14 +48,15 @@ if __name__ == '__main__':
     
 
     # Create water particles
-    for _ in range(500):
+    N = 0
+    while N != 100:
         rx = random.random()
         ry = random.random()
         vx = random.uniform(-0.003, +0.003)
         vy = random.uniform(-0.003, +0.003)
         position = Vector2(rx, ry)
         velocity = Vector2(vx, vy)
-        radius = 0.002
+        radius = 0.001
         mass = 0.1
         r, g, b = 0, 0, 255
         color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
@@ -63,6 +64,7 @@ if __name__ == '__main__':
         i = Particle(position, velocity, radius, mass, color)
         if not i.overlaps(particles):
             particles.append(i)
+            N += 1
 
     simulator = Simulator(particles)
     simulator.simulate()
