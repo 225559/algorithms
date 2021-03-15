@@ -23,31 +23,13 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 import random
+import time
 from particle import Particle
 from simulator import Simulator
 from vector2 import Vector2
 
 if __name__ == '__main__':
     particles = []
-
-    # Random particles
-        # radius = random.uniform(0.01, 0.02)
-        # mass = 1
-        # r, g, b = random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
-
-    # Create water particles
-    for _ in range(250):
-        rx = random.random()
-        ry = random.random()
-        vx = random.uniform(-0.003, +0.003)
-        vy = random.uniform(-0.003, +0.003)
-        position = Vector2(rx, ry)
-        velocity = Vector2(vx, vy)
-        radius = 0.002
-        mass = 0.1
-        r, g, b = 0, 0, 255
-        color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
-        particles.append(Particle(position, velocity, radius, mass, color))
 
     # Create ink particles
     for i in range(1, 10):
@@ -64,5 +46,23 @@ if __name__ == '__main__':
             color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
             particles.append(Particle(position, velocity, radius, mass, color))
     
+
+    # Create water particles
+    for _ in range(500):
+        rx = random.random()
+        ry = random.random()
+        vx = random.uniform(-0.003, +0.003)
+        vy = random.uniform(-0.003, +0.003)
+        position = Vector2(rx, ry)
+        velocity = Vector2(vx, vy)
+        radius = 0.002
+        mass = 0.1
+        r, g, b = 0, 0, 255
+        color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
+
+        i = Particle(position, velocity, radius, mass, color)
+        if not i.overlaps(particles):
+            particles.append(i)
+
     simulator = Simulator(particles)
     simulator.simulate()

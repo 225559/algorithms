@@ -35,6 +35,26 @@ class Particle:
         self.position.x += self.velocity.x * time
         self.position.y += self.velocity.y * time
 
+    def _overlaps(self, j):
+        """Checks if this particle overlaps with particle j.
+        If they overlap return true, otherwise return false."""
+        i = self
+        if i == j:
+            return True
+        dr = j.position - i.position
+        drdr = dr.dot(dr)
+        sigma = i.radius + j.radius
+        if drdr < sigma * sigma:
+            return True
+        return False
+    
+    def overlaps(self, particles):
+        i = self
+        for j in particles:
+            if i._overlaps(j):
+                return True
+        return False
+
     def next_collision(self, j):
         i = self
         if i == j:
