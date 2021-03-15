@@ -66,14 +66,14 @@ class Window:
             if particle.kind == "ink":
                 avg += particle.distance_from_center()
 
-            for i in range(1, self.grid_lines + 1):
-                if particle.position.x >= (i - 1) / self.grid_lines and particle.position.x < i / self.grid_lines:
-                    for j in range(1, self.grid_lines + 1):
-                        if particle.position.y >= (j - 1) / self.grid_lines and particle.position.y < j / self.grid_lines:
+            for i in range(0, self.grid_lines):
+                if (particle.position.x >= (i / self.grid_lines)) and (particle.position.x < ((i + 1) / self.grid_lines)):
+                    for j in range(0, self.grid_lines + 1):
+                        if (particle.position.y >= (j / self.grid_lines)) and (particle.position.y < ((j + 1) / self.grid_lines)):
                             if particle.kind == "ink":
-                                ink_counter[i-1][j-1] += 1
+                                ink_counter[i][j] += 1
                             if particle.kind == "water":
-                                water_counter[i-1][j-1] += 1
+                                water_counter[i][j] += 1
                             break
                     break
         
