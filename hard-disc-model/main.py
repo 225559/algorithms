@@ -23,6 +23,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 import random
+import time
 from particle import Particle
 from simulator import Simulator
 from vector2 import Vector2
@@ -30,39 +31,38 @@ from vector2 import Vector2
 if __name__ == '__main__':
     particles = []
 
-    # Random particles
-        # radius = random.uniform(0.01, 0.02)
-        # mass = 1
-        # r, g, b = random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
-
-    # Create water particles
-    for _ in range(250):
-        rx = random.random()
-        ry = random.random()
-        vx = random.uniform(-0.003, +0.003)
-        vy = random.uniform(-0.003, +0.003)
-        position = Vector2(rx, ry)
-        velocity = Vector2(vx, vy)
-        radius = 0.002
-        mass = 0.1
-        r, g, b = 0, 0, 255
-        color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
-        particles.append(Particle(position, velocity, radius, mass, color))
-    
     # Create ink particles
-    for i in range(1, 7):
-        for j in range(1, 7):
-            rx = 0.40 + i*0.01
-            ry = 0.40 + j*0.01
+    for i in range(1, 10):
+        for j in range(1, 10):
+            rx = 0.45 + i*0.01
+            ry = 0.45 + j*0.01
             vx = random.uniform(0, 0)
             vy = random.uniform(0, 0)
             position = Vector2(rx, ry)
             velocity = Vector2(vx, vy)
             radius = 0.004
             mass = 0.5
-            r, g, b = 255, 0, 0
-            color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
-            particles.append(Particle(position, velocity, radius, mass, color))
+            particles.append(Particle(position, velocity, radius, mass, "ink"))
     
+
+    # Create water particles
+    N = 0
+    while N != 100:
+        rx = random.random()
+        ry = random.random()
+        vx = random.uniform(-0.003, +0.003)
+        vy = random.uniform(-0.003, +0.003)
+        position = Vector2(rx, ry)
+        velocity = Vector2(vx, vy)
+        radius = 0.001
+        mass = 0.1
+        r, g, b = 0, 0, 255
+        color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
+
+        i = Particle(position, velocity, radius, mass, "water")
+        if not i.overlaps(particles):
+            particles.append(i)
+            N += 1
+
     simulator = Simulator(particles)
     simulator.simulate()
