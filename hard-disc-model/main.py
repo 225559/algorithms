@@ -48,12 +48,12 @@ if __name__ == '__main__':
         r, g, b = 0, 0, 255
         color = '#{:02x}{:02x}{:02x}'.format(r, g, b)
         particles.append(Particle(position, velocity, radius, mass, color))
-    
+
     # Create ink particles
-    for i in range(1, 7):
-        for j in range(1, 7):
-            rx = 0.40 + i*0.01
-            ry = 0.40 + j*0.01
+    for i in range(1, 10):
+        for j in range(1, 10):
+            rx = 0.45 + i*0.01
+            ry = 0.45 + j*0.01
             vx = random.uniform(0, 0)
             vy = random.uniform(0, 0)
             position = Vector2(rx, ry)
