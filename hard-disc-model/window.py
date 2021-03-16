@@ -44,12 +44,14 @@ class Window:
         return self.canvas.create_oval(x0, y0, x1, y1, fill=color, outline=color)
 
     def draw_grid(self):
+        """draw the grid lines in the unit box"""
         size = int(self.unit_box_size)
         for i in range(0, size, int(size/self.grid_lines)):
             self.canvas.create_line(i, 0, i, size, width=1, fill='#363636')
             self.canvas.create_line(0, i, size, i, width=1, fill='#363636')
 
     def redraw(self):
+        """redraw all particles, avg. ink position from center, and ink:water ratio"""
         self.canvas.update()
         self.canvas.update_idletasks()
         self.canvas.delete("all") # clear
