@@ -32,8 +32,8 @@ if __name__ == '__main__':
     particles = []
 
     # Create ink particles
-    for i in range(1, 10):
-        for j in range(1, 10):
+    for i in range(0, 10):
+        for j in range(0, 10):
             rx = 0.45 + i*0.01
             ry = 0.45 + j*0.01
             vx = random.uniform(0, 0)
