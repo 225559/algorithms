@@ -82,9 +82,9 @@ class Window:
         mult = self.unit_box_size / self.grid_lines
         for i in range(0, self.grid_lines):
             for j in range(0, self.grid_lines):
-                self.canvas.create_text((i * mult) + 10, (j * mult) + 10, fill="#FF1515", font="Times 8", text=str(ink_counter[i][j]))
-                self.canvas.create_text((i * mult) + 18, (j * mult) + 10, fill="#636363", font="Times 8", text=":")
-                self.canvas.create_text((i * mult) + 25, (j * mult) + 10, fill="#1515FF", font="Times 8", text=str(water_counter[i][j]))
+                self.canvas.create_text((i * mult) + 10, (j * mult) + 10, fill="#696969", font="Times 8", text=str(ink_counter[i][j]))
+                self.canvas.create_text((i * mult) + 20, (j * mult) + 10, fill="#696969", font="Times 8", text=":")
+                self.canvas.create_text((i * mult) + 27, (j * mult) + 10, fill="#696969", font="Times 8", text=str(ink_counter[i][j] + water_counter[i][j]))
 
         s = 'Avg. ink particle distance from center: {:f}'.format(avg/N)
         self.avg_ink_distance_from_center.delete("1.0", "end")
